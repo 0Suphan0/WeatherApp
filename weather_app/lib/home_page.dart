@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:weather_app/screen_page.dart';
 import 'package:http/http.dart' as http;
@@ -11,14 +13,29 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final String backgroundAssetUrl = 'assets/c.jpg';
-  double centigrate = 20.0;
-  String location = "Ankara";
+  double? centigrate;
+  String? location = "İzmir";
   final String apiKey = "bbe52cc5c96e0bc331ca6e56b4d64f2f";
 
   //Apı'den gelen Weather datasını döner.
   Future<http.Response> getWeatherData() {
     return http.get(Uri.parse(
         'https://api.openweathermap.org/data/2.5/weather?units=metric&lang=tr&q=$location&appid=$apiKey'));
+  }
+
+  void getMyResponse() async {
+    var response = await getWeatherData();
+    var myResponse = jsonDecode(response.body);
+    setState(() {
+      centigrate = myResponse['main']['temp'];
+      //gps'ten gelecek.
+      // location=
+    });
+  }
+
+  @override
+  void initState() {
+    getMyResponse();
   }
 
   @override
@@ -32,18 +49,16 @@ class _HomePageState extends State<HomePage> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(onPressed: () async {
-             var response= await getWeatherData();
-             print(response.statusCode);
-            }, child: Text("TEST")),
-            Text("$centigrate°C",
-                style: const TextStyle(
-                    fontSize: HomePageFontSize.centigradeSize,
-                    fontWeight: FontWeight.bold)),
+            Center(
+              child: Text(centigrate == null ? "?°C" : "$centigrate°C",
+                  style: const TextStyle(
+                      fontSize: HomePageFontSize.centigradeSize,
+                      fontWeight: FontWeight.bold)),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(location,
+                Text(location ?? 'Şehir verisi alınamadı :(',
                     style: const TextStyle(
                         fontSize: HomePageFontSize.locationSize)),
                 IconButton(
