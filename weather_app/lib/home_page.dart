@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:weather_app/screen_page.dart';
-import 'package:http/http.dart' as http;
+
+import 'api.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,19 +13,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Api myApi=Api();
   final String backgroundAssetUrl = 'assets/c.jpg';
   double? centigrate;
   String? location = "Eskişehir";
-  final String apiKey = "bbe52cc5c96e0bc331ca6e56b4d64f2f";
 
-  //Apı'den gelen Weather datasını döner.
-  Future<http.Response> getWeatherData() {
-    return http.get(Uri.parse(
-        'https://api.openweathermap.org/data/2.5/weather?units=metric&lang=tr&q=$location&appid=$apiKey'));
-  }
+
 
   void getMyResponse() async {
-    var response = await getWeatherData();
+    var response = await myApi.getWeatherData(location);
     var myResponse = jsonDecode(response.body);
     setState(() {
       centigrate = myResponse['main']['temp'];

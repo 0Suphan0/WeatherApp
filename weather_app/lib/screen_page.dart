@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'alert_dialog.dart';
+import 'api.dart';
+
 class ScreenPage extends StatefulWidget {
   const ScreenPage({Key? key}) : super(key: key);
 
@@ -8,6 +11,8 @@ class ScreenPage extends StatefulWidget {
 }
 
 class _ScreenPageState extends State<ScreenPage> {
+  Api myApi = Api();
+  Alert myAlert = Alert();
   final String backgroundAssetUrl = 'assets/search.jpg';
   final String hintText = 'Lütfen Şehir Giriniz';
   ScreenPageFontAndPaddingSize sizes = ScreenPageFontAndPaddingSize();
@@ -50,8 +55,11 @@ class _ScreenPageState extends State<ScreenPage> {
                       ),
                     ),
                     OutlinedButton(
-                      onPressed: () {
-                        Navigator.pop(context,selectedCity);
+                      onPressed: () async {
+                        var response = await myApi.getWeatherData(selectedCity);
+                        response.statusCode == 200
+                            ? Navigator.pop(context, selectedCity)
+                            : myAlert.showMyDialog(context);
                       },
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(width: 3.0, color: Colors.brown),
