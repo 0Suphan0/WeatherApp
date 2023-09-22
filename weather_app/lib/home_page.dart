@@ -13,18 +13,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Api myApi=Api();
-  final String backgroundAssetUrl = 'assets/c.jpg';
+  Api myApi = Api();
+  String backgroundAssetUrl = 'assets/c.jpg';
   double? centigrate;
-  String? location = "Eskişehir";
-
-
+  String? location = "Berlin";
+  String weatherBackground = '';
 
   void getMyResponse() async {
     var response = await myApi.getWeatherData(location);
     var myResponse = jsonDecode(response.body);
     setState(() {
       centigrate = myResponse['main']['temp'];
+      weatherBackground = myResponse['weather'][0]['main'];
+      backgroundAssetUrl = 'assets/$weatherBackground.jpg';
+
       //gps'ten gelecek.
       // location=
     });
@@ -42,6 +44,7 @@ class _HomePageState extends State<HomePage> {
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage(backgroundAssetUrl), fit: BoxFit.cover)),
+
       child: centigrate == null
           ? const Center(child: CircularProgressIndicator())
           : Scaffold(
@@ -63,7 +66,9 @@ class _HomePageState extends State<HomePage> {
                               fontSize: HomePageFontSize.locationSize)),
                       IconButton(
                           onPressed: () async {
-                            location = await Navigator.push(context, MaterialPageRoute(
+                            location = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
                                     builder: (context) => const ScreenPage()));
                             getMyResponse();
                           },
