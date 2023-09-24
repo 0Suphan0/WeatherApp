@@ -56,7 +56,7 @@ class _ScreenPageState extends State<ScreenPage> {
                     ),
                     OutlinedButton(
                       onPressed: () async {
-                        var response = await myApi.getWeatherData(selectedCity);
+                        var response = await myApi.getWeatherDataWithCity(selectedCity);
                         response.statusCode == 200
                             ? Navigator.pop(context, selectedCity)
                             : myAlert.showMyDialog(context);

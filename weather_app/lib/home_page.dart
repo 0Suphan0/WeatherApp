@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/screen_page.dart';
-
+import 'package:weather_app/gps.dart';
 import 'api.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,28 +14,52 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  Gps gps = Gps();
   Api myApi = Api();
   String backgroundAssetUrl = 'assets/c.jpg';
   double? centigrate;
-  String? location = "Berlin";
+  String? city = "";
   String weatherBackground = '';
+  Position? currentPosition;
 
-  void getMyResponse() async {
-    var response = await myApi.getWeatherData(location);
-    var myResponse = jsonDecode(response.body);
-    setState(() {
-      centigrate = myResponse['main']['temp'];
-      weatherBackground = myResponse['weather'][0]['main'];
-      backgroundAssetUrl = 'assets/$weatherBackground.jpg';
+  void getMyResponseWithPos() async {
+    //position verisini al gps servisi ile.
+    currentPosition = await gps.determinePosition();
 
-      //gps'ten gelecek.
-      // location=
-    });
+    //eger konum null degilse
+    if (currentPosition!=null) {
+      var response = await myApi.getWeatherDataWithLocation(currentPosition);
+      var myResponse = jsonDecode(response.body);
+      setState(() {
+        city=myResponse['name'];
+        centigrate = myResponse['main']['temp'];
+        weatherBackground = myResponse['weather'][0]['main'];
+        backgroundAssetUrl = 'assets/$weatherBackground.jpg';
+
+      });
+    }
+  }
+
+  void getMyResponseWithCity(String? city) async {
+    if (city != null) {
+      var response = await myApi.getWeatherDataWithCity(city);
+      var myResponse = jsonDecode(response.body);
+      setState(() {
+        city = myResponse['name'];
+        centigrate = myResponse['main']['temp'];
+        weatherBackground = myResponse['weather'][0]['main'];
+        backgroundAssetUrl = 'assets/$weatherBackground.jpg';
+
+        //gps'ten gelecek.
+        // location=
+      });
+    }
   }
 
   @override
   void initState() {
-    getMyResponse();
+    getMyResponseWithPos();
     super.initState();
   }
 
@@ -48,39 +73,40 @@ class _HomePageState extends State<HomePage> {
       child: centigrate == null
           ? const Center(child: CircularProgressIndicator())
           : Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Text("$centigrate°C",
-                        style: const TextStyle(
-                            fontSize: HomePageFontSize.centigradeSize,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(location ?? 'Şehir verisi alınamadı :(',
-                          style: const TextStyle(
-                              fontSize: HomePageFontSize.locationSize)),
-                      IconButton(
-                          onPressed: () async {
-                            location = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const ScreenPage()));
-                            getMyResponse();
-                          },
-                          icon: const Icon(Icons.search))
-                    ],
-                  )
-                ],
-              ),
+        backgroundColor: Colors.transparent,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Text("$centigrate°C",
+                  style: const TextStyle(
+                      fontSize: HomePageFontSize.centigradeSize,
+                      fontWeight: FontWeight.bold)),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(city ?? 'Şehir verisi alınamadı :(',
+                    style: const TextStyle(
+                        fontSize: HomePageFontSize.locationSize)),
+                IconButton(
+                    onPressed: () async {
+                      city = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ScreenPage()));
+                      getMyResponseWithCity(city);
+                    },
+                    icon: const Icon(Icons.search))
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 }
+
 
 class HomePageFontSize {
   static const double centigradeSize = 70;
