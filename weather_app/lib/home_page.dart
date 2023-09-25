@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   String? city = "";
   String weatherBackground = '';
   Position? currentPosition;
+  String? icon;
 
   void getMyResponseWithPos() async {
     //position verisini al gps servisi ile.
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage> {
         centigrate = myResponse['main']['temp'];
         weatherBackground = myResponse['weather'][0]['main'];
         backgroundAssetUrl = 'assets/$weatherBackground.jpg';
-
+        icon=myResponse['weather'][0]['icon'];
       });
     }
   }
@@ -50,9 +51,7 @@ class _HomePageState extends State<HomePage> {
         centigrate = myResponse['main']['temp'];
         weatherBackground = myResponse['weather'][0]['main'];
         backgroundAssetUrl = 'assets/$weatherBackground.jpg';
-
-        //gps'ten gelecek.
-        // location=
+        icon=myResponse['weather'][0]['icon'];
       });
     }
   }
@@ -77,6 +76,11 @@ class _HomePageState extends State<HomePage> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(
+              height: 150,
+              child: Image.network('https://openweathermap.org/img/wn/$icon@4x.png'),
+            ),
+            
             Center(
               child: Text("$centigrate°C",
                   style: const TextStyle(
