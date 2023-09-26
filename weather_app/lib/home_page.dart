@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/screen_page.dart';
 import 'package:weather_app/gps.dart';
+import 'package:weather_app/widgets/daily_weather_card.dart';
 import 'api.dart';
 
 class HomePage extends StatefulWidget {
@@ -102,6 +103,16 @@ class _HomePageState extends State<HomePage> {
                       getMyResponseWithCity(city);
                     },
                     icon: const Icon(Icons.search))
+              ],
+            ),
+            const Row(
+              mainAxisAlignment:MainAxisAlignment.center,
+              children: [
+                DailyWeather(),
+                DailyWeather(),
+                DailyWeather(),
+                DailyWeather(),
+                DailyWeather(),
               ],
             )
           ],
