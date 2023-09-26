@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   Gps gps = Gps();
   Api myApi = Api();
   String backgroundAssetUrl = 'assets/c.jpg';
@@ -25,20 +24,24 @@ class _HomePageState extends State<HomePage> {
   Position? currentPosition;
   String? icon;
 
+  List<String> icons = ["01d", "02n", "13n", "11d", "10n"];
+  List<double> temperatures = [10, 20, 30, 35, 15];
+  List<String> dates = ["Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"];
+
   void getMyResponseWithPos() async {
     //position verisini al gps servisi ile.
     currentPosition = await gps.determinePosition();
 
     //eger konum null degilse
-    if (currentPosition!=null) {
+    if (currentPosition != null) {
       var response = await myApi.getWeatherDataWithLocation(currentPosition);
       var myResponse = jsonDecode(response.body);
       setState(() {
-        city=myResponse['name'];
+        city = myResponse['name'];
         centigrate = myResponse['main']['temp'];
         weatherBackground = myResponse['weather'][0]['main'];
         backgroundAssetUrl = 'assets/$weatherBackground.jpg';
-        icon=myResponse['weather'][0]['icon'];
+        icon = myResponse['weather'][0]['icon'];
       });
     }
   }
@@ -52,7 +55,7 @@ class _HomePageState extends State<HomePage> {
         centigrate = myResponse['main']['temp'];
         weatherBackground = myResponse['weather'][0]['main'];
         backgroundAssetUrl = 'assets/$weatherBackground.jpg';
-        icon=myResponse['weather'][0]['icon'];
+        icon = myResponse['weather'][0]['icon'];
       });
     }
   }
@@ -69,63 +72,64 @@ class _HomePageState extends State<HomePage> {
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage(backgroundAssetUrl), fit: BoxFit.cover)),
-
       child: centigrate == null
           ? const Center(child: CircularProgressIndicator())
           : Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 150,
-              child: Image.network('https://openweathermap.org/img/wn/$icon@4x.png'),
-            ),
-            
-            Center(
-              child: Text("$centigrate°C",
-                  style: const TextStyle(
-                      fontSize: HomePageFontSize.centigradeSize,
-                      fontWeight: FontWeight.bold)),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(city ?? 'Şehir verisi alınamadı :(',
-                    style: const TextStyle(
-                        fontSize: HomePageFontSize.locationSize)),
-                IconButton(
-                    onPressed: () async {
-                      city = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ScreenPage()));
-                      getMyResponseWithCity(city);
-                    },
-                    icon: const Icon(Icons.search))
-              ],
-            ),
-             SizedBox(
-               height: 120,
-               width: MediaQuery.of(context).size.width * 0.9 ,
-               child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: const [
-                  DailyWeather(),
-                  DailyWeather(),
-                  DailyWeather(),
-                  DailyWeather(),
-                  DailyWeather(),
+              backgroundColor: Colors.transparent,
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 150,
+                    child: Image.network(
+                        'https://openweathermap.org/img/wn/$icon@4x.png'),
+                  ),
+                  Center(
+                    child: Text("$centigrate°C",
+                        style: const TextStyle(
+                            fontSize: HomePageFontSize.centigradeSize,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(city ?? 'Şehir verisi alınamadı :(',
+                          style: const TextStyle(
+                              fontSize: HomePageFontSize.locationSize)),
+                      IconButton(
+                          onPressed: () async {
+                            city = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const ScreenPage()));
+                            getMyResponseWithCity(city);
+                          },
+                          icon: const Icon(Icons.search))
+                    ],
+                  ),
+                  buildDailyWeatherCards(context)
                 ],
+              ),
             ),
-             )
-          ],
-        ),
-      ),
+    );
+  }
+
+  Widget buildDailyWeatherCards(BuildContext context) {
+    List<DailyWeather> dailyWeathers = [];
+
+    for (int i = 0; i < 5; i++) {
+      dailyWeathers.add(DailyWeather(
+          icon: icons[i], centigrate: temperatures[i], date: dates[i]));
+    }
+
+    return SizedBox(
+      height: 120,
+      width: MediaQuery.of(context).size.width * 0.9,
+      child:
+          ListView(scrollDirection: Axis.horizontal, children: dailyWeathers),
     );
   }
 }
-
 
 class HomePageFontSize {
   static const double centigradeSize = 70;
