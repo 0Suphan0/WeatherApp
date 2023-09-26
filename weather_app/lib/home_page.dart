@@ -105,16 +105,20 @@ class _HomePageState extends State<HomePage> {
                     icon: const Icon(Icons.search))
               ],
             ),
-            const Row(
-              mainAxisAlignment:MainAxisAlignment.center,
-              children: [
-                DailyWeather(),
-                DailyWeather(),
-                DailyWeather(),
-                DailyWeather(),
-                DailyWeather(),
-              ],
-            )
+             SizedBox(
+               height: 120,
+               width: MediaQuery.of(context).size.width * 0.9 ,
+               child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: const [
+                  DailyWeather(),
+                  DailyWeather(),
+                  DailyWeather(),
+                  DailyWeather(),
+                  DailyWeather(),
+                ],
+            ),
+             )
           ],
         ),
       ),

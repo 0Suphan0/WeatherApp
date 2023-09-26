@@ -8,24 +8,26 @@ class DailyWeather extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10)
-      ),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 70,
-            child: Image.network('https://openweathermap.org/img/wn/$icon.png'),
-          ),
-          Center(
-            child: Text("$centigrate°C",
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          ),
-          Text("Pazartesi")
-        ],
+    return SizedBox(
+      width: 100,
+      child: Card(
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 70,
+              child:
+                  Image.network('https://openweathermap.org/img/wn/$icon.png'),
+            ),
+            Center(
+              child: Text("$centigrate°C",
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold)),
+            ),
+            Text("Pazartesi")
+          ],
+        ),
       ),
     );
   }
