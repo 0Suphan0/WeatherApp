@@ -17,6 +17,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Gps gps = Gps();
   Api myApi = Api();
+
+  //Daily weather
   String backgroundAssetUrl = 'assets/c.jpg';
   double? centigrate;
   String? city = "";
@@ -24,10 +26,12 @@ class _HomePageState extends State<HomePage> {
   Position? currentPosition;
   String? icon;
 
+  // 5 Days weather datas
   List<String> icons = ["01d", "02n", "13n", "11d", "10n"];
   List<double> temperatures = [10, 20, 30, 35, 15];
   List<String> dates = ["Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"];
 
+  // get my daily weather datas with gps pos data.
   void getMyResponseWithPos() async {
     //position verisini al gps servisi ile.
     currentPosition = await gps.determinePosition();
@@ -46,6 +50,57 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // get my 5 days weather datas with gps
+  void getMyResponseDailyWithPos() async {
+    //position verisini al gps servisi ile.
+    currentPosition = await gps.determinePosition();
+
+    //eger konum null degilse
+    if (currentPosition != null) {
+      var response = await myApi.getWeatherDataDailyWithLocation(currentPosition);
+      var myResponse = jsonDecode(response.body);
+      setState(() {
+
+        //clear the list
+       icons.clear();
+       temperatures.clear();
+       dates.clear();
+
+       // fill the list
+       for(int i=7; i<40; i=i+8){
+         temperatures.add(myResponse['list'][i]['main']['temp']);
+         icons.add(myResponse['list'][i]['weather'][0]['icon']);
+         dates.add(myResponse['list'][i]['dt_txt']);
+
+       }
+
+      });
+    }
+  }
+
+  // get my 5 days weather datas with city.
+  void getMyResponseDailyWithCity(String? city) async {
+
+    if (city != null) {
+      var response = await myApi.getWeatherDataDailyWithCity(city);
+      var myResponse = jsonDecode(response.body);
+      setState(() {
+        icons.clear();
+        temperatures.clear();
+        dates.clear();
+
+        for(int i=7; i<40; i=i+8){
+          temperatures.add(myResponse['list'][i]['main']['temp']);
+          icons.add(myResponse['list'][i]['weather'][0]['icon']);
+          dates.add(myResponse['list'][i]['dt_txt']);
+
+        }
+
+      });
+    }
+  }
+
+  // get my daily weather datas with city
   void getMyResponseWithCity(String? city) async {
     if (city != null) {
       var response = await myApi.getWeatherDataWithCity(city);
@@ -63,6 +118,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     getMyResponseWithPos();
+    getMyResponseDailyWithPos();
     super.initState();
   }
 
@@ -103,6 +159,8 @@ class _HomePageState extends State<HomePage> {
                                 MaterialPageRoute(
                                     builder: (context) => const ScreenPage()));
                             getMyResponseWithCity(city);
+                            getMyResponseDailyWithCity(city);
+
                           },
                           icon: const Icon(Icons.search))
                     ],
@@ -123,7 +181,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     return SizedBox(
-      height: 120,
+      height: 170,
       width: MediaQuery.of(context).size.width * 0.9,
       child:
           ListView(scrollDirection: Axis.horizontal, children: dailyWeathers),

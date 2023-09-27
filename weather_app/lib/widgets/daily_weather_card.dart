@@ -10,7 +10,7 @@ class DailyWeather extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 100,
+      width: 150,
       child: Card(
         color: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
