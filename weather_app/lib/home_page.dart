@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/screen_page.dart';
 import 'package:weather_app/gps.dart';
 import 'package:weather_app/widgets/daily_weather_card.dart';
+import 'package:weather_app/widgets/loading_screen.dart';
 import 'api.dart';
 
 class HomePage extends StatefulWidget {
@@ -129,7 +130,7 @@ class _HomePageState extends State<HomePage> {
           image: DecorationImage(
               image: AssetImage(backgroundAssetUrl), fit: BoxFit.cover)),
       child: (centigrate == null || currentPosition==null || icons.isEmpty || dates.isEmpty ||temperatures.isEmpty)
-          ? const Center(child: CircularProgressIndicator())
+          ? const LoadingWidget()
           : Scaffold(
               backgroundColor: Colors.transparent,
               body: Column(
@@ -188,6 +189,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
 
 class HomePageFontSize {
   static const double centigradeSize = 70;
