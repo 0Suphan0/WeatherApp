@@ -62,7 +62,13 @@ Kullanıcı bu ekranda istediği konumu girip, servisin sunmuş olduğu tüm kon
 On this screen, the user can enter any location they desire and access weather data for all the locations provided by the service.(en)
 
 ## Ekran Görüntüleri (Screenshots)
+<img src="ProjectSS/izmir.png" width="auto">
+<img src="ProjectSS/london.png" width="auto">
 <img src="ProjectSS/Gaziantep.png" width="auto">
+<img src="ProjectSS/sehir sec.png" width="auto">
+<img src="ProjectSS/Gaziantep.png" width="auto">
+<img src="ProjectSS/allrequest.png" width="auto">
+<img src="ProjectSS/latlonall.png" width="auto">
 
 
 
