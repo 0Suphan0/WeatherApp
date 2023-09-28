@@ -41,10 +41,11 @@
 | `lat` | `string` | **Gerekli**. Latitude değeri. |
 | `lon` | `string` | **Gerekli**. Longitude değeri. |
   
-## Kullanılan paketler (Packages used)
+## Kullanılan paketler ve araçlar (Packages used and tools)
 
 - http: ^1.1.0 (HTTP isteği atmak için.)
 - geolocator: ^10.1.0 (Gps verisi çekerek konuma göre hava durumu bilgisi getirmek için.)
+- Postman
 
 
   
