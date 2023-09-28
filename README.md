@@ -62,6 +62,7 @@ Kullanıcı bu ekranda istediği konumu girip, servisin sunmuş olduğu tüm kon
 On this screen, the user can enter any location they desire and access weather data for all the locations provided by the service.(en)
 
 ## Ekran Görüntüleri (Screenshots)
+<img src="ProjectSS/Gaziantep.png" width="auto">
 
 
 
