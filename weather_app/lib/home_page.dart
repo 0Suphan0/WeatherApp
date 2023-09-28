@@ -27,9 +27,9 @@ class _HomePageState extends State<HomePage> {
   String? icon;
 
   // 5 Days weather datas
-  List<String> icons = ["01d", "02n", "13n", "11d", "10n"];
-  List<double> temperatures = [10, 20, 30, 35, 15];
-  List<String> dates = ["Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"];
+  List<String> icons = [];
+  List<double> temperatures = [];
+  List<String> dates =[];
 
   // get my daily weather datas with gps pos data.
   void getMyResponseWithPos() async {
@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage(backgroundAssetUrl), fit: BoxFit.cover)),
-      child: centigrate == null
+      child: (centigrate == null || currentPosition==null || icons.isEmpty || dates.isEmpty ||temperatures.isEmpty)
           ? const Center(child: CircularProgressIndicator())
           : Scaffold(
               backgroundColor: Colors.transparent,

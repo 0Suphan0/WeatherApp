@@ -9,6 +9,14 @@ class DailyWeather extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // date verisini gün formatına çevirmek icin...
+
+    List<String> weekDays = ["Pazartesi","Salı","Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"];
+
+    String weekday=weekDays[DateTime.parse(date??"").weekday-1];
+    //
+
     return SizedBox(
       width: 150,
       child: Card(
@@ -26,7 +34,7 @@ class DailyWeather extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold)),
             ),
-            Text(date??"")
+            Text(weekday)
           ],
         ),
       ),
